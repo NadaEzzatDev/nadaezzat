@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nada Ezzat — Mobile Developer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #08090e;
+      --surface: #0f1018;
+      --card: #13141f;
+      --border: rgba(255,255,255,0.07);
+      --border-hover: rgba(255,255,255,0.14);
+      --text: #ffffff;
+      --muted: #8b8fa8;
+      --dim: #4a4d65;
+      --grad: linear-gradient(135deg, #1d4ed8, #3b82f6, #38bdf8);
+      --grad2: linear-gradient(135deg, #38bdf8, #3b82f6);
+      --indigo: #3b82f6;
+      --purple: #60a5fa;
+      --pink: #38bdf8;
+      --cyan: #0ea5e9;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--indigo); border-radius: 2px; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5%;
+      height: 68px;
+      background: rgba(8,9,14,0.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-size: 1rem; font-weight: 700;
+      background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      font-family: 'Fira Code', monospace;
+    }
+
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+      color: var(--muted); text-decoration: none;
+      font-size: 0.875rem; font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+
+    .nav-btn {
+      background: var(--indigo); color: white;
+      padding: 0.5rem 1.25rem; border-radius: 8px;
+      text-decoration: none; font-size: 0.875rem; font-weight: 600;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .nav-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+    .hamburger span { width: 22px; height: 2px; background: var(--muted); border-radius: 2px; }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      text-align: center;
+      padding: 8rem 5% 5rem;
+      position: relative; overflow: hidden;
+    }
+
+    /* mesh gradient blobs */
+    .blob {
+      position: absolute; border-radius: 50%;
+      filter: blur(80px); opacity: 0.18; pointer-events: none;
+    }
+    .blob-1 { width: 600px; height: 600px; background: #1d4ed8; top: -100px; left: -200px; }
+    .blob-2 { width: 500px; height: 500px; background: #0ea5e9; bottom: -100px; right: -100px; }
+    .blob-3 { width: 300px; height: 300px; background: #38bdf8; top: 40%; left: 50%; transform: translate(-50%,-50%); opacity: 0.1; }
+
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: rgba(59,130,246,0.12);
+      border: 1px solid rgba(59,130,246,0.3);
+      color: #93c5fd;
+      padding: 0.4rem 1rem; border-radius: 100px;
+      font-size: 0.8rem; font-weight: 500;
+      margin-bottom: 2rem;
+      animation: fadeUp 0.5s ease both;
+    }
+
+    .hero-badge .dot {
+      width: 6px; height: 6px; background: var(--cyan);
+      border-radius: 50%; box-shadow: 0 0 6px var(--cyan);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(1.4)} }
+
+    .hero-title {
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      font-weight: 900; line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.5s 0.1s ease both;
+    }
+
+    .hero-title .grad-text {
+      background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+
+    .hero-sub {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      color: var(--muted); max-width: 560px;
+      line-height: 1.7; margin-bottom: 2.5rem;
+      animation: fadeUp 0.5s 0.2s ease both;
+    }
+
+    .hero-sub strong { color: var(--text); }
+
+    .hero-btns {
+      display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;
+      animation: fadeUp 0.5s 0.3s ease both;
+    }
+
+    .btn-grd {
+      background: var(--grad); color: white;
+      padding: 0.85rem 2rem; border-radius: 10px;
+      text-decoration: none; font-weight: 700; font-size: 0.9rem;
+      transition: opacity 0.2s, transform 0.2s;
+      box-shadow: 0 8px 32px rgba(59,130,246,0.3);
+    }
+    .btn-grd:hover { opacity: 0.9; transform: translateY(-2px); }
+
+    .btn-ghost {
+      background: transparent; color: var(--text);
+      padding: 0.85rem 2rem; border-radius: 10px;
+      text-decoration: none; font-weight: 600; font-size: 0.9rem;
+      border: 1px solid var(--border-hover);
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .btn-ghost:hover { border-color: rgba(99,102,241,0.5); transform: translateY(-2px); }
+
+    .hero-metrics {
+      display: flex; gap: 2.5rem; margin-top: 4rem;
+      animation: fadeUp 0.5s 0.4s ease both;
+      flex-wrap: wrap; justify-content: center;
+    }
+
+    .metric { text-align: center; }
+    .metric-val {
+      font-size: 2rem; font-weight: 800;
+      background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      line-height: 1;
+    }
+    .metric-lbl { font-size: 0.75rem; color: var(--dim); margin-top: 0.25rem; text-transform: uppercase; letter-spacing: 0.08em; }
+
+    @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+    /* ── DIVIDER ── */
+    .divider-bar {
+      height: 1px; background: var(--border);
+    }
+
+    /* ── SECTIONS ── */
+    .section { padding: 7rem 5%; }
+    .section.alt { background: var(--surface); }
+
+    .sec-pill {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2);
+      color: #93c5fd; font-size: 0.75rem; font-weight: 600;
+      padding: 0.3rem 0.8rem; border-radius: 100px; text-transform: uppercase;
+      letter-spacing: 0.08em; margin-bottom: 1rem;
+    }
+
+    .sec-heading {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800; line-height: 1.1;
+      letter-spacing: -0.02em; margin-bottom: 1rem;
+    }
+
+    .sec-heading .grad-text {
+      background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+
+    .sec-desc { color: var(--muted); max-width: 520px; font-size: 0.95rem; line-height: 1.7; }
+
+    /* ── ABOUT ── */
+    .about-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 4rem; align-items: start; margin-top: 3.5rem;
+    }
+
+    .about-body p { color: var(--muted); font-size: 0.95rem; line-height: 1.8; margin-bottom: 1rem; }
+    .about-body p strong { color: var(--text); }
+
+    .highlight-pill {
+      display: inline; background: rgba(59,130,246,0.15);
+      color: #93c5fd; padding: 1px 8px; border-radius: 4px;
+      font-size: 0.9em; font-weight: 500;
+    }
+
+    /* timeline */
+    .timeline { display: flex; flex-direction: column; gap: 0; }
+
+    .tl-item {
+      display: flex; gap: 1.25rem;
+      padding-bottom: 1.5rem;
+      position: relative;
+    }
+
+    .tl-left { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+
+    .tl-dot {
+      width: 10px; height: 10px; border-radius: 50%; margin-top: 4px;
+      background: var(--indigo); border: 2px solid var(--bg);
+      box-shadow: 0 0 0 2px var(--indigo);
+      flex-shrink: 0;
+    }
+
+    .tl-dot.current { background: var(--cyan); box-shadow: 0 0 0 2px var(--cyan), 0 0 12px var(--cyan); }
+
+    .tl-line {
+      width: 1px; flex: 1; min-height: 100%;
+      background: var(--border); margin-top: 4px;
+    }
+
+    .tl-item:last-child .tl-line { display: none; }
+
+    .tl-date { font-family: 'Fira Code', monospace; font-size: 0.7rem; color: var(--cyan); margin-bottom: 0.15rem; }
+    .tl-role { font-size: 0.9rem; font-weight: 700; }
+    .tl-company { font-size: 0.8rem; color: var(--purple); margin-top: 1px; }
+    .tl-note { font-size: 0.78rem; color: var(--dim); margin-top: 2px; }
+
+    /* ── SKILLS ── */
+    .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin-top: 3.5rem; }
+
+    .skill-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 14px; padding: 1.4rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .skill-card:hover { border-color: rgba(59,130,246,0.4); transform: translateY(-3px); }
+
+    .skill-card-title {
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.1em; color: var(--indigo); margin-bottom: 0.9rem;
+    }
+
+    .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+
+    .tag {
+      background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+      color: var(--muted); font-size: 0.78rem;
+      padding: 0.28rem 0.7rem; border-radius: 6px;
+      font-family: 'Fira Code', monospace;
+      transition: all 0.2s;
+    }
+    .tag:hover { border-color: rgba(59,130,246,0.4); color: #93c5fd; background: rgba(59,130,246,0.08); }
+    .tag.featured { border-color: rgba(59,130,246,0.3); color: #93c5fd; background: rgba(59,130,246,0.1); }
+    .tag.warm { border-color: rgba(236,72,153,0.3); color: #7dd3fc; background: rgba(14,165,233,0.08); }
+
+    /* ── PROJECTS ── */
+    .projects-list { display: flex; flex-direction: column; gap: 1.5rem; margin-top: 3.5rem; }
+
+    .proj-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 18px; overflow: hidden;
+      transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+    }
+    .proj-card:hover {
+      border-color: rgba(59,130,246,0.35);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.4), 0 0 0 1px rgba(59,130,246,0.1);
+      transform: translateY(-2px);
+    }
+
+    .proj-inner { display: grid; grid-template-columns: 1fr auto; gap: 2rem; padding: 2rem; align-items: start; }
+    .proj-inner.no-side { grid-template-columns: 1fr; }
+
+    .proj-top { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1rem; }
+
+    .proj-icon-wrap {
+      width: 52px; height: 52px; border-radius: 14px;
+      background: rgba(59,130,246,0.12); border: 1px solid rgba(59,130,246,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; flex-shrink: 0;
+    }
+
+    .proj-meta { flex: 1; }
+    .proj-num { font-family: 'Fira Code', monospace; font-size: 0.7rem; color: var(--dim); margin-bottom: 3px; }
+    .proj-name { font-size: 1.2rem; font-weight: 800; letter-spacing: -0.01em; }
+    .proj-sub { font-size: 0.8rem; color: var(--purple); font-weight: 500; margin-top: 2px; }
+
+    .proj-stats {
+      display: flex; gap: 1.25rem; margin-bottom: 1rem;
+      padding: 0.9rem 1.2rem;
+      background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.12);
+      border-radius: 10px; flex-wrap: wrap;
+    }
+
+    .ps-item { display: flex; flex-direction: column; }
+    .ps-val { font-size: 1.1rem; font-weight: 800; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1; }
+    .ps-lbl { font-size: 0.65rem; color: var(--dim); text-transform: uppercase; letter-spacing: 0.07em; margin-top: 2px; }
+
+    .proj-desc { font-size: 0.875rem; color: var(--muted); line-height: 1.7; margin-bottom: 1rem; }
+
+    .acc-toggle {
+      background: none; border: 1px solid var(--border);
+      color: var(--muted); font-size: 0.78rem; font-family: 'Fira Code', monospace;
+      padding: 0.35rem 0.9rem; border-radius: 6px; cursor: pointer;
+      transition: all 0.2s; margin-bottom: 0.75rem;
+    }
+    .acc-toggle:hover { border-color: rgba(59,130,246,0.4); color: #93c5fd; }
+
+    .acc-body { display: none; margin-bottom: 1rem; }
+    .acc-body.open { display: block; }
+
+    .feat-group { font-size: 0.7rem; font-weight: 700; color: var(--indigo); text-transform: uppercase; letter-spacing: 0.1em; margin: 0.75rem 0 0.3rem; }
+    .feat-group:first-child { margin-top: 0; }
+
+    .feat-item {
+      font-size: 0.82rem; color: var(--muted); padding-left: 1rem;
+      position: relative; line-height: 1.6; margin-bottom: 2px;
+    }
+    .feat-item::before { content: '›'; position: absolute; left: 0; color: var(--indigo); }
+
+    .proj-badges { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.2rem; }
+
+    .badge-tag {
+      font-family: 'Fira Code', monospace; font-size: 0.72rem;
+      padding: 0.25rem 0.65rem; border-radius: 5px; border: 1px solid transparent;
+    }
+    .badge-tag.default { background: rgba(255,255,255,0.04); border-color: var(--border); color: var(--muted); }
+    .badge-tag.blue { background: rgba(59,130,246,0.1); border-color: rgba(99,102,241,0.25); color: #93c5fd; }
+    .badge-tag.pink { background: rgba(14,165,233,0.08); border-color: rgba(14,165,233,0.25); color: #7dd3fc; }
+    .badge-tag.cyan { background: rgba(6,182,212,0.08); border-color: rgba(6,182,212,0.25); color: #67e8f9; }
+
+    .store-row { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+    .sl {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      font-size: 0.75rem; font-weight: 600; padding: 0.4rem 0.85rem;
+      border-radius: 7px; text-decoration: none; border: 1px solid transparent;
+      transition: transform 0.15s, opacity 0.15s;
+    }
+    .sl:hover { transform: translateY(-1px); opacity: 0.85; }
+    .sl.gplay { background:rgba(52,168,83,0.1); border-color:rgba(52,168,83,0.3); color:#4ade80; }
+    .sl.apple { background:rgba(255,255,255,0.06); border-color:rgba(255,255,255,0.14); color:#f0f0f0; }
+    .sl.huawei{ background:rgba(207,0,0,0.08); border-color:rgba(207,0,0,0.25); color:#fca5a5; }
+    .sl.tg    { background:rgba(37,211,102,0.08); border-color:rgba(37,211,102,0.25); color:#86efac; }
+    .sl.web   { background:rgba(59,130,246,0.1); border-color:rgba(59,130,246,0.3); color:#93c5fd; }
+    .sl.mi    { background:rgba(255,106,0,0.08); border-color:rgba(255,106,0,0.25); color:#fdba74; }
+
+    /* ── CONTACT ── */
+    .contact-wrap {
+      max-width: 640px; margin: 3.5rem auto 0;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 20px; padding: 3rem;
+      text-align: center; position: relative; overflow: hidden;
+    }
+
+    .contact-wrap::before {
+      content: ''; position: absolute; top: -80px; left: 50%;
+      transform: translateX(-50%);
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(59,130,246,0.15), transparent 70%);
+      pointer-events: none;
+    }
+
+    .contact-wrap h3 { font-size: 1.6rem; font-weight: 800; margin-bottom: 0.75rem; letter-spacing: -0.02em; }
+    .contact-wrap p { color: var(--muted); font-size: 0.9rem; margin-bottom: 2rem; line-height: 1.6; }
+
+    .contact-email-btn {
+      display: inline-flex; align-items: center; gap: 0.6rem;
+      background: var(--grad); color: white;
+      padding: 1rem 2.2rem; border-radius: 12px;
+      text-decoration: none; font-weight: 700; font-size: 0.95rem;
+      box-shadow: 0 8px 32px rgba(59,130,246,0.3);
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .contact-email-btn:hover { opacity: 0.9; transform: translateY(-2px); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--surface); border-top: 1px solid var(--border);
+      padding: 2rem 5%;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .footer-brand { font-weight: 700; font-size: 0.9rem; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .footer-note { font-size: 0.8rem; color: var(--dim); font-family: 'Fira Code', monospace; }
+
+    /* ── REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.55s ease, transform 0.55s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ── MOBILE ── */
+    @media(max-width:900px) {
+      .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .proj-inner { grid-template-columns: 1fr; }
+    }
+    @media(max-width:768px) {
+      .nav-links { display: none; flex-direction: column; position: absolute; top: 68px; left: 0; right: 0; background: var(--surface); border-bottom: 1px solid var(--border); padding: 1.5rem 5%; gap: 1.2rem; }
+      .nav-links.open { display: flex; }
+      .hamburger { display: flex; }
+      .nav-btn { display: none; }
+      .section { padding: 5rem 5%; }
+      footer { flex-direction: column; text-align: center; }
+      .hero-metrics { gap: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <div class="nav-logo">nada.ezzat</div>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="mailto:nadaezz303@gmail.com" class="nav-btn">Hire Me</a>
+  <div class="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+
+  <div class="hero-badge">
+    <span class="dot"></span>
+    Available for new opportunities
+  </div>
+
+  <h1 class="hero-title">
+    Mobile Apps That<br/>
+    <span class="grad-text">People Actually Use</span>
+  </h1>
+
+  <p class="hero-sub">
+    Hi, I'm <strong>Nada Ezzat</strong> — a Flutter &amp; Android developer building
+    production-grade apps trusted by <strong>35,000+ users</strong> worldwide, across 6 projects.
+  </p>
+
+  <div class="hero-btns">
+    <a href="#projects" class="btn-grd">View My Work</a>
+    <a href="#contact" class="btn-ghost">Get In Touch</a>
+  </div>
+
+  <div class="hero-metrics">
+    <div class="metric"><div class="metric-val">35K+</div><div class="metric-lbl">Users</div></div>
+    <div class="metric"><div class="metric-val">6</div><div class="metric-lbl">Projects</div></div>
+    <div class="metric"><div class="metric-val">2</div><div class="metric-lbl">Companies</div></div>
+    <div class="metric"><div class="metric-val">4</div><div class="metric-lbl">App Stores</div></div>
+  </div>
+</section>
+
+<div class="divider-bar"></div>
+
+<!-- ABOUT -->
+<section id="about" class="section alt">
+  <div class="sec-pill">About Me</div>
+  <h2 class="sec-heading">Developer &amp; <span class="grad-text">Problem Solver</span></h2>
+  <p class="sec-desc">Turning complex requirements into clean, scalable, and secure mobile apps since ITI.</p>
+
+  <div class="about-grid">
+    <div class="about-body reveal">
+      <p>I'm <strong>Nada Ezzat</strong>, a Mobile Application Developer passionate about building apps that solve real problems at scale. I graduated from the <strong>Faculty of Computer and Informatics</strong> and leveled up through the <span class="highlight-pill">ITI 9-Month Mobile Development Track</span>.</p>
+      <p>I specialize in <strong>Flutter & Dart</strong> for cross-platform apps, with solid Android roots. My work spans educational platforms, medical systems, e-commerce, and on-demand services — deployed across <strong>Google Play, App Store, Huawei AppGallery, and Xiaomi GetApps</strong>.</p>
+      <p>Currently working as a <strong>Flutter Developer at EMLENote</strong> on flexible hours. Previously built production apps at <strong>EMLENote</strong> and <strong>VODO GLOBAL</strong> as an Android Developer.</p>
+    </div>
+    <div class="reveal">
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-left"><div class="tl-dot current"></div><div class="tl-line"></div></div>
+          <div><div class="tl-date">Current</div><div class="tl-role">Flutter Developer</div><div class="tl-company">EMLENote</div><div class="tl-note">Flexible hours · cross-platform</div></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-left"><div class="tl-dot"></div><div class="tl-line"></div></div>
+          <div><div class="tl-date">Previous</div><div class="tl-role">Android Developer</div><div class="tl-company">VODO GLOBAL</div><div class="tl-note">Native Android · Kotlin</div></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-left"><div class="tl-dot"></div><div class="tl-line"></div></div>
+          <div><div class="tl-date">Previous</div><div class="tl-role">Android Developer</div><div class="tl-company">EMLENote</div><div class="tl-note">Native Android · Kotlin</div></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-left"><div class="tl-dot"></div><div class="tl-line"></div></div>
+          <div><div class="tl-date">Training</div><div class="tl-role">Mobile App Dev Track</div><div class="tl-company">ITI – Information Technology Institute</div><div class="tl-note">9-month intensive program</div></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-left"><div class="tl-dot"></div><div class="tl-line"></div></div>
+          <div><div class="tl-date">Education</div><div class="tl-role">B.Sc. Computer Science</div><div class="tl-company">Faculty of Computer & Informatics</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills" class="section">
+  <div class="sec-pill">Tech Stack</div>
+  <h2 class="sec-heading">What I <span class="grad-text">Work With</span></h2>
+  <p class="sec-desc">From clean architecture to hardware integrations — here's what I bring to every project.</p>
+  <div class="skills-grid">
+    <div class="skill-card reveal">
+      <div class="skill-card-title">Core</div>
+      <div class="tags">
+        <span class="tag featured">Flutter</span><span class="tag featured">Dart</span>
+        <span class="tag featured">Kotlin</span><span class="tag">Android SDK</span>
+        <span class="tag">Jetpack</span>
+      </div>
+    </div>
+    <div class="skill-card reveal">
+      <div class="skill-card-title">Architecture</div>
+      <div class="tags">
+        <span class="tag warm">Clean Architecture</span><span class="tag warm">MVVM</span>
+        <span class="tag">Repository Pattern</span><span class="tag">SOLID</span>
+        <span class="tag">Multi-Flavor</span>
+      </div>
+    </div>
+    <div class="skill-card reveal">
+      <div class="skill-card-title">Libraries</div>
+      <div class="tags">
+        <span class="tag">Retrofit</span><span class="tag">Dagger/Hilt</span>
+        <span class="tag featured">ExoPlayer/Media3</span><span class="tag">Room DB</span>
+        <span class="tag">Coroutines</span><span class="tag featured">Firestore</span>
+      </div>
+    </div>
+    <div class="skill-card reveal">
+      <div class="skill-card-title">Hardware</div>
+      <div class="tags">
+        <span class="tag warm">BLE</span><span class="tag warm">NFC</span>
+        <span class="tag">Face Recognition</span><span class="tag">Camera APIs</span>
+        <span class="tag">QR Scanning</span><span class="tag">Screen Protection</span>
+      </div>
+    </div>
+    <div class="skill-card reveal">
+      <div class="skill-card-title">Backend & APIs</div>
+      <div class="tags">
+        <span class="tag">REST APIs</span><span class="tag featured">Firebase</span>
+        <span class="tag">Real-time Sync</span><span class="tag">Push Notifications</span>
+      </div>
+    </div>
+    <div class="skill-card reveal">
+      <div class="skill-card-title">Tools</div>
+      <div class="tags">
+        <span class="tag">Android Studio</span><span class="tag">VS Code</span>
+        <span class="tag">Git / GitHub</span><span class="tag">Postman</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects" class="section alt">
+  <div class="sec-pill">Featured Work</div>
+  <h2 class="sec-heading">Projects That <span class="grad-text">Ship.</span></h2>
+  <p class="sec-desc">Real apps. Real users. Real impact across education, healthcare, and commerce.</p>
+
+  <div class="projects-list">
+
+    <!-- 1. TebVerse -->
+    <div class="proj-card reveal">
+      <div class="proj-inner">
+        <div>
+          <div class="proj-top">
+            <div class="proj-icon-wrap">📱</div>
+            <div class="proj-meta">
+              <div class="proj-num">01 · Flutter · Multi-Flavor</div>
+              <div class="proj-name">TebVerse Learners</div>
+              <div class="proj-sub">Educational Platform · Student + Instructor Apps</div>
+            </div>
+          </div>
+          <div class="proj-stats">
+            <div class="ps-item"><span class="ps-val">30K+</span><span class="ps-lbl">Students</span></div>
+            <div class="ps-item"><span class="ps-val">5</span><span class="ps-lbl">Platforms</span></div>
+            <div class="ps-item"><span class="ps-val">2</span><span class="ps-lbl">App Versions</span></div>
+          </div>
+          <p class="proj-desc">A production-level e-learning platform with multi-flavor architecture — a protected private version with advanced anti-cheating systems and a public Google Play release. Includes both a student app and a full instructor management dashboard.</p>
+          <button class="acc-toggle" onclick="toggleAcc(this)">▸ Show Features</button>
+          <div class="acc-body">
+            <div class="feat-group">Student App</div>
+            <div class="feat-item">Adaptive video streaming · resume playback · per-video progress</div>
+            <div class="feat-item">Interactive quizzes with instant results · in-app PDF viewer</div>
+            <div class="feat-item">Real-time notifications for new content</div>
+            <div class="feat-group">🔐 Protected Version (Private)</div>
+            <div class="feat-item">Face recognition — auto-pause when no face detected</div>
+            <div class="feat-item">Screen recording prevention · headphone detection enforcement</div>
+            <div class="feat-item">TTS — student name &amp; ID announced periodically</div>
+            <div class="feat-item">Device binding · continuous server activity validation</div>
+            <div class="feat-group">Instructor App</div>
+            <div class="feat-item">Upload &amp; organize video content · course management</div>
+            <div class="feat-item">Student engagement analytics · watch reports · quiz stats</div>
+            <div class="feat-item">Complaint management system · available as web + mobile</div>
+          </div>
+          <div class="proj-badges">
+            <span class="badge-tag blue">Flutter</span>
+            <span class="badge-tag blue">Multi-Flavor</span>
+            <span class="badge-tag blue">Media3/ExoPlayer</span>
+            <span class="badge-tag pink">Face Recognition</span>
+            <span class="badge-tag default">Clean Arch</span>
+            <span class="badge-tag default">MVVM</span>
+            <span class="badge-tag default">Background Services</span>
+          </div>
+          <div class="store-row">
+            <a href="https://play.google.com/store/apps/details?id=com.connect.academy" target="_blank" class="sl gplay">▶ Google Play</a>
+            <a href="https://testflight.apple.com/join/vMwWSzm1" target="_blank" class="sl apple">🍎 TestFlight</a>
+            <a href="https://appgallery.huawei.com/#/app/C114979515" target="_blank" class="sl huawei">🌐 AppGallery</a>
+            <a href="https://global.app.mi.com/details?lo=ID&la=en_US&id=com.teb.learners" target="_blank" class="sl mi">📱 Xiaomi</a>
+            <a href="https://t.me/emle_students_app" target="_blank" class="sl tg">📲 APK</a>
+            <a href="https://edu.emlenotes.com/" target="_blank" class="sl web">🌐 Educator Web</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Med Attendance -->
+    <div class="proj-card reveal">
+      <div class="proj-inner">
+        <div>
+          <div class="proj-top">
+            <div class="proj-icon-wrap">🎓</div>
+            <div class="proj-meta">
+              <div class="proj-num">02 · Flutter</div>
+              <div class="proj-name">Med Attendance</div>
+              <div class="proj-sub">Zagazig University · Faculty of Medicine</div>
+            </div>
+          </div>
+          <div class="proj-stats">
+            <div class="ps-item"><span class="ps-val">3K+</span><span class="ps-lbl">Students</span></div>
+            <div class="ps-item"><span class="ps-val">3</span><span class="ps-lbl">Store Platforms</span></div>
+            <div class="ps-item"><span class="ps-val">Real</span><span class="ps-lbl">University</span></div>
+          </div>
+          <p class="proj-desc">A complete, real-university attendance system using BLE + NFC with manual fallback. Two apps — Med Attendance for students and Attendance Supervisor for instructors — deployed on App Store, Google Play and Huawei AppGallery.</p>
+          <button class="acc-toggle" onclick="toggleAcc(this)">▸ Show Features</button>
+          <div class="acc-body">
+            <div class="feat-group">Student App</div>
+            <div class="feat-item">Real-time attendance status · present/absent session records</div>
+            <div class="feat-item">Submit complaints for unrecorded attendance · track responses</div>
+            <div class="feat-group">📡 Instructor App</div>
+            <div class="feat-item">BLE proximity detection for automatic check-in</div>
+            <div class="feat-item">NFC scanning for fast, seamless attendance</div>
+            <div class="feat-item">Manual fallback via Student ID or name search</div>
+            <div class="feat-item">Check-in/out system · attendance stats · complaint management</div>
+          </div>
+          <div class="proj-badges">
+            <span class="badge-tag blue">Flutter</span>
+            <span class="badge-tag pink">BLE</span>
+            <span class="badge-tag pink">NFC</span>
+            <span class="badge-tag default">Real-time Sync</span>
+            <span class="badge-tag default">Multi-role</span>
+          </div>
+          <div class="store-row">
+            <a href="https://apps.apple.com/app/attendance-supervisor/id6753613288" target="_blank" class="sl apple">🍎 Supervisor</a>
+            <a href="https://play.google.com/store/apps/details?id=com.attendance.supervisor" target="_blank" class="sl gplay">▶ Supervisor</a>
+            <a href="https://appgallery.huawei.com/#/app/C116837105" target="_blank" class="sl huawei">🌐 Supervisor</a>
+            <a href="https://apps.apple.com/us/app/med-attendance/id6758558125" target="_blank" class="sl apple">🍎 Student</a>
+            <a href="https://play.google.com/store/apps/details?id=com.med.attendance" target="_blank" class="sl gplay">▶ Student</a>
+            <a href="https://appgallery.huawei.com/#/app/C116836743" target="_blank" class="sl huawei">🌐 Student</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. BardiMed -->
+    <div class="proj-card reveal">
+      <div class="proj-inner">
+        <div>
+          <div class="proj-top">
+            <div class="proj-icon-wrap" style="background:rgba(6,182,212,0.1);border-color:rgba(6,182,212,0.2);">🧠</div>
+            <div class="proj-meta">
+              <div class="proj-num">03 · Flutter Web</div>
+              <div class="proj-name">BardiMed QBank</div>
+              <div class="proj-sub">Medical Education · Web Platform</div>
+            </div>
+          </div>
+          <div class="proj-stats">
+            <div class="ps-item"><span class="ps-val">1.5K+</span><span class="ps-lbl">Users</span></div>
+            <div class="ps-item"><span class="ps-val">Live</span><span class="ps-lbl">Web</span></div>
+          </div>
+          <p class="proj-desc">A web-based question bank for medical students with custom practice sessions, timed mock exams, written and video explanations, smart mistake tracking, bookmarking, and a Firestore-powered recommendations section.</p>
+          <button class="acc-toggle" onclick="toggleAcc(this)">▸ Show Features</button>
+          <div class="acc-body">
+            <div class="feat-group">Practice</div>
+            <div class="feat-item">Sessions by chapter, previous exams, or mistakes</div>
+            <div class="feat-item">Written + video explanations · question bookmarking</div>
+            <div class="feat-group">📝 Exam</div>
+            <div class="feat-item">Timed mock exam with countdown · final score &amp; summary</div>
+            <div class="feat-item">Performance analytics · weak area tracking</div>
+            <div class="feat-group">⭐ Extras</div>
+            <div class="feat-item">Re-practice from mistakes or past exams</div>
+            <div class="feat-item">Firestore-powered real-time recommendations section</div>
+          </div>
+          <div class="proj-badges">
+            <span class="badge-tag cyan">Flutter Web</span>
+            <span class="badge-tag cyan">Firestore</span>
+            <span class="badge-tag default">Exam Engine</span>
+            <span class="badge-tag default">Analytics</span>
+          </div>
+          <div class="store-row">
+            <a href="https://lms.bardimed.com/" target="_blank" class="sl web">🚀 Visit Live Platform</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4 & 5 side by side wrapper -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;" class="proj-two-col">
+
+      <!-- 4. VODO -->
+      <div class="proj-card reveal">
+        <div class="proj-inner no-side">
+          <div>
+            <div class="proj-top">
+              <div class="proj-icon-wrap" style="background:rgba(236,72,153,0.1);border-color:rgba(236,72,153,0.2);">🛒</div>
+              <div class="proj-meta">
+                <div class="proj-num">04 · Android · 🇸🇦</div>
+                <div class="proj-name">VODO</div>
+                <div class="proj-sub">Sales Rep · Invoicing · QR Inventory</div>
+              </div>
+            </div>
+            <div class="proj-stats">
+              <div class="ps-item"><span class="ps-val">500+</span><span class="ps-lbl">Users</span></div>
+              <div class="ps-item"><span class="ps-val">🇸🇦</span><span class="ps-lbl">Saudi Market</span></div>
+            </div>
+            <p class="proj-desc">Field sales app for managing products, creating invoices, and updating inventory via QR code scanning — built for real sales workflows.</p>
+            <div class="proj-badges">
+              <span class="badge-tag blue">Android</span><span class="badge-tag pink">QR Scanner</span>
+              <span class="badge-tag default">Invoices</span><span class="badge-tag default">Inventory</span>
+            </div>
+            <div class="store-row">
+              <a href="https://play.google.com/store/apps/details?id=com.project.vodo" target="_blank" class="sl gplay">▶ Google Play</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Layers Spa -->
+      <div class="proj-card reveal">
+        <div class="proj-inner no-side">
+          <div>
+            <div class="proj-top">
+              <div class="proj-icon-wrap" style="background:rgba(59,130,246,0.1);border-color:rgba(59,130,246,0.2);">💆‍♀️</div>
+              <div class="proj-meta">
+                <div class="proj-num">05 · Android · 🇸🇦</div>
+                <div class="proj-name">Layers Spa</div>
+                <div class="proj-sub">On-Demand Beauty · Saudi Market</div>
+              </div>
+            </div>
+            <div class="proj-stats">
+              <div class="ps-item"><span class="ps-val">500+</span><span class="ps-lbl">Users</span></div>
+              <div class="ps-item"><span class="ps-val">Live</span><span class="ps-lbl">Play Store</span></div>
+            </div>
+            <p class="proj-desc">On-demand beauty &amp; spa app combining e-commerce and booking — browse, order with online/cash payment, track orders, and book sessions with date &amp; time slot selection.</p>
+            <div class="proj-badges">
+              <span class="badge-tag blue">Android</span><span class="badge-tag pink">Booking</span>
+              <span class="badge-tag default">Order Tracking</span><span class="badge-tag default">Payments</span>
+            </div>
+            <div class="store-row">
+              <a href="https://play.google.com/store/apps/details?id=com.layers.spa" target="_blank" class="sl gplay">▶ Google Play</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 6. BardiNFC Writer -->
+    <div class="proj-card reveal">
+      <div class="proj-inner">
+        <div>
+          <div class="proj-top">
+            <div class="proj-icon-wrap" style="background:rgba(6,182,212,0.1);border-color:rgba(6,182,212,0.2);">📲</div>
+            <div class="proj-meta">
+              <div class="proj-num">06 · Android · Internal Tool</div>
+              <div class="proj-name">BardiNFC Writer</div>
+              <div class="proj-sub">NFC Card Management · Event & Conference Attendance</div>
+            </div>
+          </div>
+          <div class="proj-stats">
+            <div class="ps-item"><span class="ps-val">NFC</span><span class="ps-lbl">Hardware</span></div>
+            <div class="ps-item"><span class="ps-val">Internal</span><span class="ps-lbl">Enterprise Tool</span></div>
+            <div class="ps-item"><span class="ps-val">Real</span><span class="ps-lbl">Events Use</span></div>
+          </div>
+          <p class="proj-desc">An internal Android tool for event organizers to register attendees using NFC cards. Organizers search for users, write their data onto NFC cards, and link card IDs to the backend — enabling fast, contactless check-ins at conferences and sessions.</p>
+          <button class="acc-toggle" onclick="toggleAcc(this)">▸ Show Features</button>
+          <div class="acc-body">
+            <div class="feat-group">User–Card Linking</div>
+            <div class="feat-item">Search users by name or mobile number</div>
+            <div class="feat-item">Scan NFC card via device · write user name & profile link onto card</div>
+            <div class="feat-item">Send card's unique ID to backend · associate card with user account</div>
+            <div class="feat-group">📡 NFC Read / Write</div>
+            <div class="feat-item">Full NFC read & write implementation on Android</div>
+            <div class="feat-item">Unique card ID handling and backend validation</div>
+            <div class="feat-group">🏫 Attendance</div>
+            <div class="feat-item">Users tap NFC card to check in to conferences & sessions</div>
+            <div class="feat-item">Fast, contactless, accurate attendance tracking at events</div>
+          </div>
+          <div class="proj-badges">
+            <span class="badge-tag blue">Android</span>
+            <span class="badge-tag cyan">NFC Read/Write</span>
+            <span class="badge-tag default">Backend Integration</span>
+            <span class="badge-tag default">Card–User Mapping</span>
+            <span class="badge-tag pink">Internal Tool</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:0.5rem;margin-top:0.25rem;">
+            <span style="font-size:0.75rem;color:var(--dim);font-family:'Fira Code',monospace;">⚙ Internal enterprise app · not publicly listed</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="section">
+  <div style="text-align:center;">
+    <div class="sec-pill" style="margin:0 auto 1rem;">Contact</div>
+    <h2 class="sec-heading">Let's <span class="grad-text">Build Together</span></h2>
+    <p class="sec-desc" style="margin:0 auto;">Open to new opportunities, freelance work, and interesting projects.</p>
+  </div>
+  <div class="contact-wrap reveal">
+    <h3>Say Hello 👋</h3>
+    <p>Have a project in mind or want to discuss an opportunity? I'd love to hear from you — drop me a message anytime.</p>
+    <a href="mailto:nadaezz303@gmail.com" class="contact-email-btn">
+      📧 nadaezz303@gmail.com
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">Nada Ezzat · Mobile Developer</div>
+  <div class="footer-note">© 2024 · Built with ♥ · GitHub Pages</div>
+  <div class="footer-note">Flutter · Android · Dart</div>
+</footer>
+
+<script>
+  // Reveal on scroll
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+  // Active nav
+  const secs = document.querySelectorAll('section[id]');
+  window.addEventListener('scroll', () => {
+    let cur = '';
+    secs.forEach(s => { if (window.scrollY >= s.offsetTop - 150) cur = s.id; });
+    document.querySelectorAll('.nav-links a').forEach(a => {
+      a.style.color = a.getAttribute('href') === '#' + cur ? '#fff' : '';
+    });
+  });
+
+  // Accordion
+  function toggleAcc(btn) {
+    const body = btn.nextElementSibling;
+    const open = body.classList.toggle('open');
+    btn.textContent = open ? '▾ Hide Features' : '▸ Show Features';
+  }
+
+  // Responsive two-col projects
+  function checkWidth() {
+    const twocol = document.querySelector('.proj-two-col');
+    if (twocol) {
+      twocol.style.gridTemplateColumns = window.innerWidth < 768 ? '1fr' : '1fr 1fr';
+    }
+  }
+  checkWidth();
+  window.addEventListener('resize', checkWidth);
+</script>
+</body>
+</html>
